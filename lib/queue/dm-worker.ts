@@ -315,10 +315,10 @@ async function processComment(job: Job<ProcessCommentJob>): Promise<void> {
     const matchResult = automation.matchAnyWord
       ? { matched: true, matchedKeyword: null }
       : matchKeywords(
-          commentText,
-          automation.keywords,
-          automation.wholeWordMatch
-        );
+        commentText,
+        automation.keywords,
+        automation.wholeWordMatch
+      );
 
     if (!matchResult.matched) {
       continue;
@@ -482,7 +482,7 @@ async function processComment(job: Job<ProcessCommentJob>): Promise<void> {
             },
             data: { publicReplyError: formatError(classifySendError(error)), publicReplyDeliveryUnconfirmed: !isConfirmedSendRejection(error) },
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     }
 
@@ -852,7 +852,7 @@ async function sendFollowRecheckAck({
     await sendPostbackOnce({
       // Its own id: the tap's id is claimed later by the link or prompt that
       // the re-check sends, and claiming it here would suppress that message.
-      operationId: operationId ? `${operationId}:ack` : null,
+      operationId: operationId ? `${operationId}:ack` : undefined,
       send: () =>
         sendDirectMessage({ context, instagramAccountId, userId, message }),
     });
@@ -1031,7 +1031,7 @@ async function processPostback(job: Job<ProcessPostbackJob>): Promise<void> {
               },
             },
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       const promptText = renderMessageWithoutLink({
@@ -1287,10 +1287,10 @@ async function processMessage(job: Job<ProcessMessageJob>): Promise<void> {
     const matchResult = automation.matchAnyWord
       ? { matched: true, matchedKeyword: null }
       : matchKeywords(
-          messageText,
-          automation.keywords,
-          automation.wholeWordMatch
-        );
+        messageText,
+        automation.keywords,
+        automation.wholeWordMatch
+      );
 
     if (!matchResult.matched) continue;
 
@@ -1553,9 +1553,9 @@ async function recordWorkerFailure(
       job && "commentId" in job.data ? job.data.commentId : null;
     const account = instagramAccountId
       ? await prisma.instagramAccount.findUnique({
-          where: { instagramId: instagramAccountId },
-          select: { workspaceId: true },
-        })
+        where: { instagramId: instagramAccountId },
+        select: { workspaceId: true },
+      })
       : null;
 
     await prisma.operationalEvent.create({
